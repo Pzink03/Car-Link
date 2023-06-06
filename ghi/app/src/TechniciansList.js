@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
-function TechList() {
-  const [techList, setTechList] = useState([]);
+function TechniciansList() {
+  const [technicians, setTechnicians] = useState([]);
 
-  const getTechs = async () => {
+  const getTechnicians = async () => {
     const techResponse = await fetch('http://localhost:8080/api/technicians/');
 
     if (techResponse.ok) {
-      const techData = await techData.json();
-      setTechList(techData);
+      const technicians = await techResponse.json();
+      setTechnicians(technicians.technicians);
     }
   };
 
@@ -20,11 +20,47 @@ function TechList() {
       }
     );
     if (techResponse.ok) {
-      getTechs();
+      setTechnicians();
     }
   };
 
   useEffect(() => {
-    getTechs();
+    getTechnicians();
   }, []);
+
+  return (
+    <table className='table table-striped'>
+      <thead>
+        <tr>
+          <th>Employee ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Delete Technician</th>
+        </tr>
+      </thead>
+      <tbody>
+        {technicians.map((technician) => {
+          return (
+            <tr key={technician.id}>
+              <td>{technician.employee_id}</td>
+              <td>{technician.first_name}</td>
+              <td>{technician.last_name}</td>
+              <td>
+                <button
+                  onClick={() => {
+                    deleteTech(technician.id);
+                  }}
+                  className='btn btn-danger'
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
 }
+
+export default TechniciansList;
