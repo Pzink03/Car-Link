@@ -14,10 +14,12 @@ class Technician(models.Model):
     last_name = models.CharField(max_length=25)
     employee_id = models.CharField(max_length=25)
 
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
 
 class Status(models.Model):
-    id = models.PositiveSmallIntegerField(primary_key=True)
-    name = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=10)
 
     def __str__(self):
         return self.name
@@ -29,16 +31,7 @@ class Status(models.Model):
 
 class Appointment(models.Model):
 
-    @classmethod
-    def create(cls, **kwargs):
-        kwargs["status"] = Status.objects.get(name="Created")
-        appointment = cls(**kwargs)
-        appointment.save()
-        return appointment
-
-
-    date = models.DateField()
-    time = models.TimeField()
+    date_time = models.DateTimeField()
     reason = models.CharField(max_length = 200)
     vin = models.CharField(max_length=17, unique=True)
     customer = models.CharField(max_length=50)
@@ -67,10 +60,17 @@ class Appointment(models.Model):
         self.save()
 
     def get_api_url(self):
-        return reverse("api_show_appointment", kwargs={"pk": self.pk})
+        return reverse("show_appointment", kwargs={"id": self.id})
     
-    def __str_(self):
-        return self.title
+    def __str__(self):
+        return f"{self.customer}: {self.reason}"
     
     class Meta:
-        ordering = ("date", "time",)
+        ordering = ("date_time",)
+
+    @classmethod
+    def create(cls, **kwargs):
+        kwargs["status"] = Status.objects.get(name="Created")
+        appointment = cls(**kwargs)
+        appointment.save()
+        return appointment
