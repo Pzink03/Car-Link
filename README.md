@@ -32,5 +32,7 @@ Frontend:
 
 ## Sales microservice
 
-Explain your models and integration with the inventory
-microservice, here.
+Models:
+Using my poller I was able to set an AutomobileVO with the vin and sold status of the automobiles in the inventory.
+I used the unique vin automobile to get specific data about that automobile. I was able to change the sold status
+of an automobile to true any time a new sale is made. With this I was also able to prevent any automobiles from being sold twice.
