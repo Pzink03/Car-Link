@@ -6,7 +6,7 @@ from django.test import TransactionTestCase, Client
 class Tests(TransactionTestCase):
 
     # ###TECHNICIANS ENDPOINTS
-    def test_sales_people_list(self):
+    def test_technicians_list(self):
         Technician.objects.create(first_name="first", last_name="last", employee_id=1111)
 
         client = Client()
@@ -17,7 +17,7 @@ class Tests(TransactionTestCase):
         self.assertTrue('technicians' in data, msg="Did not give response with salespeople field.")
         self.assertEqual(len(data['technicians']), 1, msg="Did not return correct number of salespeople.")
 
-    def test_sales_people_create(self):
+    def test_technicians_create(self):
         client = Client()
         body = {
             "first_name": "first",
@@ -29,14 +29,14 @@ class Tests(TransactionTestCase):
 
         self.assertEqual(response.status_code, 200, msg="Did not get a 200 OK for the path projects/")
 
-    def test_sales_people_delete(self):
-        Technician.objects.create(first_name="first", last_name="last", employee_id=1)
+    def test_technician_delete(self):
+        technician = Technician.objects.create(first_name="first", last_name="last", employee_id=1)
 
         client = Client()
-        response = client.delete("/api/technicians/1")
+        response = client.delete(f"/api/technicians/{technician.id}/")
         self.assertEqual(response.status_code, 200, msg="Did not get a 200 OK for technicians delete.")
 
-        response = client.delete("/api/technicians/1/")
+        response = client.delete(f"/api/technicians/${technician.id}/")
         self.assertTrue(response.status_code == 404 or response.status_code == 400, msg="Did not get a 404 OK technicians delete of an unknown id.")
 
     ####APPOINTMENT ENDPOINTS
@@ -53,6 +53,7 @@ class Tests(TransactionTestCase):
         self.assertEqual(len(data['appointments']), 1, msg="Did not return correct number of appointment.")
 
     def test_appointment_create(self):
+        Appointment.objects.create(id=100, name='created')
         tech = Technician.objects.create(first_name="first", last_name="last", employee_id=1)
 
         client = Client()
@@ -61,7 +62,7 @@ class Tests(TransactionTestCase):
             "reason":"broken glass. everywhere.",
             "vin":"2222",
             "customer":"Warren Longmire",
-            "technician":"1"
+            "technician": tech.id
         }
 
         response = client.post("/api/appointments/", json.dumps(body), content_type='application/json')

@@ -16,11 +16,11 @@ function TechniciansList() {
     const techResponse = await fetch(
       `http://localhost:8080/api/technicians/${id}/`,
       {
-        method: 'DELETE',
+        method: 'delete',
       }
     );
     if (techResponse.ok) {
-      setTechnicians();
+      getTechnicians();
     }
   };
 
@@ -29,37 +29,40 @@ function TechniciansList() {
   }, []);
 
   return (
-    <table className='table table-striped'>
-      <thead>
-        <tr>
-          <th>Employee ID</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Delete Technician</th>
-        </tr>
-      </thead>
-      <tbody>
-        {technicians.map((technician) => {
-          return (
-            <tr key={technician.id}>
-              <td>{technician.employee_id}</td>
-              <td>{technician.first_name}</td>
-              <td>{technician.last_name}</td>
-              <td>
-                <button
-                  onClick={() => {
-                    deleteTech(technician.id);
-                  }}
-                  className='btn btn-danger'
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <>
+      <h1 className='mt-4 mb-3'>Technicians</h1>
+      <table className='table table-striped'>
+        <thead>
+          <tr>
+            <th>Employee ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Delete Technician</th>
+          </tr>
+        </thead>
+        <tbody>
+          {technicians.map((technician) => {
+            return (
+              <tr key={technician.id}>
+                <td>{technician.employee_id}</td>
+                <td>{technician.first_name}</td>
+                <td>{technician.last_name}</td>
+                <td>
+                  <button
+                    onClick={() => {
+                      deleteTech(technician.id);
+                    }}
+                    className='btn btn-danger'
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </>
   );
 }
 

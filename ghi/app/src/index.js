@@ -10,16 +10,36 @@ root.render(
 );
 
 async function loadData() {
-  const techResponse = await fetch('http://localhost:8080/api/technicians/');
-  if (techResponse.ok) {
-    const techData = await techResponse.json();
+  const technicianResponse = await fetch(
+    'http://localhost:8080/api/technicians/'
+  );
+  const automobileResponse = await fetch(
+    'http://localhost:8100/api/automobiles/'
+  );
+  const appointmentResponse = await fetch(
+    'http://localhost:8080/api/appointments/'
+  );
+  if (
+    technicianResponse.ok &&
+    automobileResponse.ok &&
+    appointmentResponse.ok
+  ) {
+    const technicianData = await technicianResponse.json();
+    const automobileData = await automobileResponse.json();
+    const appointmentData = await appointmentResponse.json();
     root.render(
       <React.StrictMode>
-        <App techs={techData.techs} />
+        <App
+          technicians={technicianData.technicians}
+          automobiles={automobileData.automobiles}
+          appointments={appointmentData.appointments}
+        />
       </React.StrictMode>
     );
   } else {
-    console.error(techResponse);
+    console.error(technicianResponse);
+    console.error(automobileResponse);
+    console.error(appointmentResponse);
   }
 }
 loadData();

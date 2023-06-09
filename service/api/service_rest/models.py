@@ -33,7 +33,7 @@ class Appointment(models.Model):
 
     date_time = models.DateTimeField()
     reason = models.CharField(max_length = 200)
-    vin = models.CharField(max_length=17, unique=True)
+    vin = models.CharField(max_length=17)
     customer = models.CharField(max_length=50)
     vip = models.BooleanField(default=False)
 

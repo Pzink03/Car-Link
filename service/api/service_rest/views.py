@@ -2,51 +2,9 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 import json
 
-from common.json import ModelEncoder
-from .models import (
-    AutomobileVO, 
-    Appointment, 
-    Technician,
-)
+from .encoders import TechnicianEncoder, AppointmentEncoder
 
-# Create your views here.
-class AutomobileVOEncoder(ModelEncoder):
-    model = AutomobileVO
-    properties = [
-        "vin",
-        "sold",
-    ]
-
-class TechnicianEncoder(ModelEncoder):
-    model = Technician
-    properties = [
-        "first_name",
-        "last_name",
-        "employee_id",
-        "id",
-    ]
-
-class AppointmentEncoder(ModelEncoder):
-    model = Appointment
-    properties = [
-        "id",
-        "date_time",
-        "reason",
-        "vin",
-        "customer",
-        "technician",
-        "vip",
-        "status",
-    ]
-
-    encoders = {
-        "technician": TechnicianEncoder(),
-    }
-
-    def get_extra_data(self, o):
-        return {"status": o.status.name}
-
-
+from .models import Appointment, Technician
 
 
 @require_http_methods(["GET", "POST"])
@@ -73,9 +31,8 @@ def list_technicians(request):
             response.status_code = 400
             return response
 
-
 @require_http_methods(["DELETE"])
-def show_technician(request):
+def show_technician(request, id):
     count, _ = Technician.objects.filter(id=id).delete()
     return JsonResponse({"deleted": count > 0})
 
